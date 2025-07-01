@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starbucks Recipe Flip-Cards</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #00704a 0%, #004d33 100%);
+            min-height: 100vh;
+        }
+
+        /* Holy Grail Layout */
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #00704a;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Main content area */
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        article {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Flip Card Styles */
+        .flip-card {
+            background-color: transparent;
+            width: 350px;
+            height: 450px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .flip-card-front {
+            background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+            border: 3px solid #00704a;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, #00704a 0%, #004d33 100%);
+            color: white;
+            transform: rotateY(180deg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .drink-image {
+            width: 100%;
+            height: 60%;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .drink-info {
+            padding: 1rem;
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .drink-title {
+            font-size: 1.5rem;
+            color: #00704a;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .drink-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .recipe-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .ingredients, .instructions {
+            margin-bottom: 1rem;
+        }
+
+        .ingredients h4, .instructions h4 {
+            margin-bottom: 0.5rem;
+            color: #d4edda;
+            font-size: 1rem;
+        }
+
+        .ingredients ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .ingredients li {
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+            position: relative;
+            font-size: 0.85rem;
+        }
+
+        .ingredients li:before {
+            content: "☕";
+            position: absolute;
+            left: 0;
+        }
+
+        .instructions ol {
+            padding-left: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .instructions li {
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
+        }
+
+        footer {
+            background: #00704a;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: auto;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            article {
+                gap: 1.5rem;
+            }
+
+            .flip-card {
+                width: 90%;
+                max-width: 350px;
+            }
+
+            main {
+                padding: 1rem 0.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            header h1 {
+                font-size: 1.7rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            .flip-card {
+                height: 400px;
+            }
+
+            .flip-card-back {
+                padding: 1rem;
+            }
+
+            .recipe-title {
+                font-size: 1.1rem;
+            }
+
+            .ingredients li, .instructions li {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media screen and (min-width: 1200px) {
+            article {
+                gap: 3rem;
+            }
+        }
+
+        /* Hover effects for better UX */
+        .flip-card {
+            transition: transform 0.3s ease;
+        }
+
+        .flip-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Starbucks at Home</h1>
+            <p>Recreate your favorite coffee shop drinks with these easy recipes</p>
+        </header>
+
+        <main>
+            <article>
+                <!-- Caramel Macchiato Card -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <img src="https://www.starbucks.co.nz/content/menu/0432705001652994943.jpg" alt="Caramel Macchiato" class="drink-image">
+                            <div class="drink-info">
+                                <h3 class="drink-title">Caramel Macchiato</h3>
+                                <p class="drink-description">Rich espresso, steamed milk, and vanilla syrup topped with caramel sauce</p>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="recipe-title">Caramel Macchiato Recipe</h3>
+                            <div class="ingredients">
+                                <h4>Ingredients:</h4>
+                                <ul>
+                                    <li>2 shots espresso</li>
+                                    <li>1 cup steamed milk</li>
+                                    <li>2 tbsp vanilla syrup</li>
+                                    <li>2 tbsp caramel sauce</li>
+                                    <li>Whipped cream (optional)</li>
+                                </ul>
+                            </div>
+                            <div class="instructions">
+                                <h4>Instructions:</h4>
+                                <ol>
+                                    <li>Add vanilla syrup to mug</li>
+                                    <li>Pour steamed milk</li>
+                                    <li>Add espresso shots on top</li>
+                                    <li>Drizzle with caramel sauce</li>
+                                    <li>Add whipped cream if desired</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Caramel Frappuccino Card -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <img src="https://globalassets.starbucks.com/digitalassets/products/bev/SBX20220323_CaramelFrapp.jpg?impolicy=1by1_wide_topcrop_630&crop=180,360,1440,1440&wid=630&hei=630&qlt=85" alt="Caramel Frappuccino" class="drink-image">
+                            <div class="drink-info">
+                                <h3 class="drink-title">Caramel Frappuccino</h3>
+                                <p class="drink-description">Blended iced coffee drink with caramel flavor and whipped cream</p>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="recipe-title">Caramel Frappuccino Recipe</h3>
+                            <div class="ingredients">
+                                <h4>Ingredients:</h4>
+                                <ul>
+                                    <li>1 cup strong coffee, cooled</li>
+                                    <li>1/2 cup milk</li>
+                                    <li>3 tbsp caramel sauce</li>
+                                    <li>1 cup ice</li>
+                                    <li>2 tbsp sugar</li>
+                                    <li>Whipped cream</li>
+                                </ul>
+                            </div>
+                            <div class="instructions">
+                                <h4>Instructions:</h4>
+                                <ol>
+                                    <li>Blend coffee, milk, 2 tbsp caramel, ice, and sugar</li>
+                                    <li>Blend until smooth and frothy</li>
+                                    <li>Pour into glass</li>
+                                    <li>Top with whipped cream</li>
+                                    <li>Drizzle remaining caramel on top</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vanilla Latte Card -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <img src="https://globalassets.starbucks.com/digitalassets/products/bev/SBX20190617_CaffeLatte.jpg?impolicy=1by1_wide_topcrop_630&crop=180,360,1440,1440&wid=630&hei=630&qlt=85" alt="Vanilla Latte" class="drink-image">
+                            <div class="drink-info">
+                                <h3 class="drink-title">Vanilla Latte</h3>
+                                <p class="drink-description">Smooth espresso with steamed milk and sweet vanilla syrup</p>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="recipe-title">Vanilla Latte Recipe</h3>
+                            <div class="ingredients">
+                                <h4>Ingredients:</h4>
+                                <ul>
+                                    <li>2 shots espresso</li>
+                                    <li>1 cup steamed milk</li>
+                                    <li>2 tbsp vanilla syrup</li>
+                                    <li>Milk foam</li>
+                                    <li>Cinnamon (optional)</li>
+                                </ul>
+                            </div>
+                            <div class="instructions">
+                                <h4>Instructions:</h4>
+                                <ol>
+                                    <li>Add vanilla syrup to mug</li>
+                                    <li>Pour in espresso shots</li>
+                                    <li>Add steamed milk</li>
+                                    <li>Top with milk foam</li>
+                                    <li>Sprinkle cinnamon if desired</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Starbucks Recipe Collection |</p>
+        </footer>
+    </div>
+</body>
+</html>
